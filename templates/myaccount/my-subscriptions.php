@@ -58,8 +58,12 @@ if( ! defined( 'ABSPATH' ) ) exit; // exit if accessed directly.
 		<?php echo $subscription->plan->name . $quantity; ?>
 	<?php endif; ?>
 	</td>
-	<td class="plan-amount" data-title="<?php echo esc_attr( esc_html__( 'Amount', 'wsspg-woocommerce-stripe-subscription-payment-gateway' ) ); ?>">
+	<td class="plan-amount" data-title="<?php echo esc_attr( __( 'Amount', 'wsspg-woocommerce-stripe-subscription-payment-gateway' ) ); ?>">
+	<?php if(Wsspg::is_zero_decimal($subscription->plan->currency)): ?>
+	<?php echo '<strong>'.get_woocommerce_currency_symbol( strtoupper( $subscription->plan->currency ) ) . sprintf( '%0.0f', ( ( $subscription->plan->amount * $subscription->quantity )  * ( 100 + $subscription->tax_percent  ) / 100 ) ) . '</strong>'; ?>
+	<?php else : ?>
 	<?php echo '<strong>'.get_woocommerce_currency_symbol( strtoupper( $subscription->plan->currency ) ) . preg_replace( '/.00/', '', sprintf( '%0.2f', ( ( ( $subscription->plan->amount * $subscription->quantity ) / 100 ) * ( 100 + $subscription->tax_percent ) ) / 100 ) ) . '</strong>'; ?>
+	<?php endif; ?>
 	<?php if( $subscription->plan->interval_count > 1 ): ?>
 	<?php echo ' '.esc_html__( 'every', 'wsspg-woocommerce-stripe-subscription-payment-gateway' ).' <strong>'.$subscription->plan->interval_count.' '.$subscription->plan->interval.'s</strong>'; ?>
 	<?php else : ?>

@@ -449,4 +449,70 @@ class Wsspg {
 			}
 		}
 	}
+
+	/**
+	 * Returns true if $currency is zero decimal currency..
+	 *
+	 * @since   1.0.x
+	 * @param   string
+	 * @return  bool
+	 */
+	public static function is_zero_decimal( $currency ) {
+		$ret = false;
+		switch( strtoupper($currency) ) {
+			//	zero decimal currencies.
+			case 'BIF':
+			case 'CLP':
+			case 'DJF':
+			case 'GNF':
+			case 'JPY':
+			case 'KMF':
+			case 'KRW':
+			case 'MGA':
+			case 'PYG':
+			case 'RWF':
+			case 'VND':
+			case 'VUV':
+			case 'XAF':
+			case 'XOF':
+			case 'XPF':
+				$ret = true;
+				break;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Returns the order total in the smallest currency unit.
+	 *
+	 * @since   1.0.x
+	 * @param   float
+	 * @return  int
+	 */
+	public static function get_zero_decimal( $total = null, $currency ) {
+
+		if( isset( $total ) ) {
+			if(Wsspg::is_zero_decimal($currency)){
+				$total = absint( $total );
+			}else{
+				$total = absint( round( $total, 2 ) * 100 );
+			}
+		}
+		return $total;
+	}
+
+	/**
+	 * Formats an amount from the smallest currency unit to the largest.
+	 *
+	 * @since   1.0.x
+	 * @access  public
+	 * @param   mixed
+	 */
+	public static function format_currency_unit( $amount, $currency ) {
+
+		if(! Wsspg::is_zerodecimal($currency)){
+			$amount = sprintf( '%0.2f', $amount / 100 );
+		}
+		return $amount;
+	}
 }

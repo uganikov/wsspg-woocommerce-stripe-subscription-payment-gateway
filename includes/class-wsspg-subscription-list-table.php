@@ -125,6 +125,28 @@ class Wsspg_Subscription_List_Table extends WP_List_Table {
 				$user_link = get_edit_user_link( $user[0]->ID );
 				$user_ps .= "<p><a href='{$user_link}'>{$user[0]->display_name}</a>&nbsp;|&nbsp;<a href='mailto:{$user[0]->user_email}'>{$user[0]->user_email}</a></p>";
 			}
+
+			$display_amount = '';
+			echo ($subscription->plan->currency);
+			if(Wsspg::is_zero_decimal($subscription->plan->currency)){
+				$display_amount = sprintf(
+					'%s%d per %s %s(s)',
+					get_woocommerce_currency_symbol( strtoupper( $subscription->plan->currency ) ),
+					( $subscription->plan->amount * $subscription->quantity ) ,
+					$subscription->plan->interval_count,
+					$subscription->plan->interval
+				);
+			}else{
+				$display_amount = sprintf(
+					'%s%.02f per %s %s(s)',
+					get_woocommerce_currency_symbol( strtoupper( $subscription->plan->currency ) ),
+					( $subscription->plan->amount * $subscription->quantity ) / 100,
+					$subscription->plan->interval_count,
+					$subscription->plan->interval
+				);
+			}
+			echo ($display_amount);
+
 			$data[] = array(
 				'ID' => $i + 1,
 				'subscription' => sprintf(
@@ -144,13 +166,7 @@ class Wsspg_Subscription_List_Table extends WP_List_Table {
 					$subscription->plan->id,
 					$subscription->plan->name,
 					$subscription->quantity > 1 ? '<strong> x ' . $subscription->quantity . '</strong>' : '' ,
-					sprintf(
-						'%s%.02f per %s %s(s)',
-						get_woocommerce_currency_symbol( strtoupper( $subscription->plan->currency ) ),
-						( $subscription->plan->amount * $subscription->quantity ) / 100,
-						$subscription->plan->interval_count,
-						$subscription->plan->interval
-					)
+					$display_amount
 				),
 				'created' => date( DATE_RFC2822, $subscription->created ),
 			);

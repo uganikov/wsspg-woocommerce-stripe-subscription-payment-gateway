@@ -359,13 +359,14 @@ class Wsspg_Subscriptions {
 					delete_post_meta( $post_id, '_wsspg_stripe_plan_trial_period_days' );
 				} else {
 					$plan = $response;
+					$decimal_amount = Wsspg::is_zero_decimal($plan->currency)?$plan->amount : $plan->amount / 100;
 					$meta_array = array(
-						'_price'                                 => $plan->amount / 100,
-						'_regular_price'                         => $plan->amount / 100,
+						'_price'                                 => $decimal_amount,
+						'_regular_price'                         => $decimal_amount,
 						'_sale_price'                            => '',
 						'_wsspg_stripe_plan_id'                 => $plan->id,
 						'_wsspg_stripe_plan_name'               => $plan->name,
-						'_wsspg_stripe_plan_amount'             => $plan->amount / 100,
+						'_wsspg_stripe_plan_amount'             => $decimal_amount,
 						'_wsspg_stripe_plan_currency'           => $plan->currency,
 						'_wsspg_stripe_plan_interval'           => $plan->interval,
 						'_wsspg_stripe_plan_interval_count'     => $plan->interval_count,
