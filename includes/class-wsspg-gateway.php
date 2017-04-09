@@ -713,7 +713,7 @@ class Wsspg_Payment_Gateway extends WC_Payment_Gateway_CC {
 				$minimum = 50;
 				break;
 			case 'JPY':
-				$minimum = 5000;
+				$minimum = 50;
 				break;
 			case 'MXN':
 				$minimum = 1000;
