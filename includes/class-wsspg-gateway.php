@@ -610,33 +610,7 @@ class Wsspg_Payment_Gateway extends WC_Payment_Gateway_CC {
 	 * @return  int
 	 */
 	public function wsspg_get_zero_decimal( $total = null ) {
-		
-		if( isset( $total ) ) {
-			switch( $this->currency ) {
-				//	zero decimal currencies.
-				case 'BIF':
-				case 'CLP':
-				case 'DJF':
-				case 'GNF':
-				case 'JPY':
-				case 'KMF':
-				case 'KRW':
-				case 'MGA':
-				case 'PYG':
-				case 'RWF':
-				case 'VND':
-				case 'VUV':
-				case 'XAF':
-				case 'XOF':
-				case 'XPF':
-					$total = absint( $total );
-					break;
-				default:
-					$total = absint( round( $total, 2 ) * 100 );
-					break;
-			}
-		}
-		return $total;
+		return Wsspg::get_zero_decimal($total, $this->currency);
 	}
 	
 	/**
@@ -647,32 +621,7 @@ class Wsspg_Payment_Gateway extends WC_Payment_Gateway_CC {
 	 * @param   mixed
 	 */
 	private function wsspg_format_currency_unit( $amount, $currency ) {
-		
-		switch( $currency ) {
-			//	zero decimal currencies.
-			case 'BIF':
-			case 'CLP':
-			case 'DJF':
-			case 'GNF':
-			case 'JPY':
-			case 'KMF':
-			case 'KRW':
-			case 'MGA':
-			case 'PYG':
-			case 'RWF':
-			case 'VND':
-			case 'VUV':
-			case 'XAF':
-			case 'XOF':
-			case 'XPF':
-				//	amount is already in the correct format.
-				break;
-			default:
-				//	format the currency to two decimal places.
-				$amount = sprintf( '%0.2f', $amount / 100 );
-				break;
-		}
-		return $amount;
+		return Wsspg::format_currency_unit($amount, $currency);
 	}
 	
 	/**
